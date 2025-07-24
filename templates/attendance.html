@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista obecności</title>
+</head>
+<body>
+    <h2>Dodaj wpis obecności</h2>
+    <p><a href="{{ url_for('logout') }}">Wyloguj</a></p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>{% endif %}
+    {% endwith %}
+    <form method="POST">
+        Data: <input type="date" name="date" value="{{ today }}" required><br>
+
+        Początek pracy:
+        <select name="start_time" required>
+            {% for t in time_options %}
+            <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+        </select><br>
+
+        Koniec pracy:
+        <select name="end_time" required>
+            {% for t in time_options %}
+            <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+        </select><br>
+
+        Rodzaj pracy:
+        <select name="work_type">
+            <option value="normalny">Normalny</option>
+            <option value="nadgodziny">Nadgodziny</option>
+            <option value="praca zdalna">Praca zdalna</option>
+            <option value="urlop">Urlop</option>
+            <option value="L4">L4</option>
+            <option value="opieka nad dzieckiem">Opieka nad dzieckiem</option>
+        </select><br>
+
+        Opis: <textarea name="description"></textarea><br>
+        <button type="submit">Zapisz</button>
+    </form>
+</body>
+</html>
