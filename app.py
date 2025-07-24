@@ -1,9 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-from collections import defaultdict
-from datetime import datetime, date, time, timedelta
-import os
+from flask              import Flask, render_template, redirect, url_for, request, session, flash
+from flask_sqlalchemy   import SQLAlchemy
+from werkzeug.security  import generate_password_hash, check_password_hash
+from collections        import defaultdict
+from datetime           import datetime, date, time, timedelta
+import os, getpass
 
 app = Flask(__name__)
 app.secret_key = 'tajny_klucz'
@@ -149,6 +149,22 @@ def detailraport():
     entries = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.date).all()
 
     return render_template('detailraport.html', entries=entries, username=user.username, datetime=datetime)
+
+@app.cli.command('adduser')
+def adduser():
+    username = input("Login użytkownika: ")
+    if User.query.filter_by(username=username).first():
+        print("Użytkownik już istnieje.")
+        return
+    
+    password = getpass.getpass("Hasło: ")
+    password_hash = generate_password_hash(password)
+    user = User(username=username, password_hash=password_hash)
+    
+    db.session.add(user)
+    db.session.commit()
+    
+    print(f"Dodano użytkownika {username}.")
 
 # KOMENDA INICJALIZUJĄCA
 @app.cli.command('initdb')
