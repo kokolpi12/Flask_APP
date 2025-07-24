@@ -75,6 +75,19 @@ def attendance():
         data = request.form
         start_time = datetime.strptime(data['start_time'], '%H:%M').time()
         end_time = datetime.strptime(data['end_time'], '%H:%M').time()
+        user_description = data.get('description', '').strip()
+
+        work_type = data['work_type']
+
+        if data['work_type'] in ["opieka nad dzieckiem"]:
+            start_time = time(8, 0)
+            end_time = time(16, 0)
+            description = f"Opieka nad dzieckiem - {user_description}"
+        elif data['work_type'] in ["urlop"]:
+            description = f"Urlop - {user_description}"
+        else:
+            description = user_description
+
 
         if end_time <= start_time:
             flash('Koniec pracy musi być późniejszy niż początek.')
@@ -86,8 +99,9 @@ def attendance():
             start_time=start_time,
             end_time=end_time,
             work_type=data['work_type'],
-            description=data.get('description')
+            description=description
         )
+        
         db.session.add(entry)
         db.session.commit()
         flash('Dodano wpis')

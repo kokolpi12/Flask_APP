@@ -5,7 +5,9 @@
     <title>Raport obecności</title>
     <style>
         table, th, td { border: 1px solid black; border-collapse: collapse; padding: 4px; }
+        .desc { min-width: fit-content; }
     </style>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
 </head>
 <body>
     <h2>Raport obecności - {{ username }}</h2>
@@ -41,7 +43,7 @@
                             + (((datetime.combine(e.date, e.end_time) - datetime.combine(e.date, e.start_time)).seconds % 3600) // 60) / 60 }}
                     </td> -->
                     <!-- <td>{{ e.work_type }}</td> -->
-                    <td>{{ e.description or '' }}</td>
+                    <td class="desc">{{ e.description or '' }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}
