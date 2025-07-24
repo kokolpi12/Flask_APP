@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from collections import defaultdict
 from datetime import datetime, date, time, timedelta
 import os
 
@@ -63,13 +62,7 @@ def attendance():
         for h in range(0, 96)  # 96 x 15min = 24h
     ]
 
-    user = User.query.get(session['user_id'])
 
-    # Pobierz ostatni wpis użytkownika
-    last_entry = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.id.desc()).first()
-
-    default_start = last_entry.start_time.strftime('%H:%M') if last_entry else "08:00"
-    default_end = last_entry.end_time.strftime('%H:%M') if last_entry else "16:00"
 
     if request.method == 'POST':
         data = request.form
@@ -94,13 +87,7 @@ def attendance():
         return redirect(url_for('attendance'))
 
     today = date.today().isoformat()
-    
-    return render_template('attendance.html', 
-                            today=today, 
-                            default_start=default_start, 
-                            default_end=default_end, 
-                            time_options=time_options
-    )
+    return render_template('attendance.html', today=today, time_options=time_options)
 
 @app.route('/raport')
 def raport():
@@ -110,35 +97,7 @@ def raport():
     user = User.query.get(session['user_id'])
     entries = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.date).all()
 
-    # Grupowanie po dacie
-    grouped = defaultdict(list)
-    for e in entries:
-        grouped[e.date].append(e)
-
-    # Sumowanie czasu z przelicznikiem
-    raport_data = []
-    for date, day_entries in grouped.items():
-        total_hours = 0
-        details = []
-
-        for e in day_entries:
-            start_dt = datetime.combine(e.date, e.start_time)
-            end_dt = datetime.combine(e.date, e.end_time)
-            duration = (end_dt - start_dt).total_seconds() / 3600  # godziny jako float
-
-            if e.work_type.lower() == "nadgodziny":
-                duration *= 1.5  # przelicznik
-
-            total_hours += duration
-            details.append(e)
-
-        raport_data.append({
-            'date': date,
-            'entries': details,
-            'total_hours': round(total_hours, 2),
-        })
-
-    return render_template('raport.html', raport_data=raport_data, username=user.username, datetime=datetime)
+    return render_template('raport.html', entries=entries, username=user.username, datetime=datetime)
 
 @app.route('/detailraport')
 def detailraport():

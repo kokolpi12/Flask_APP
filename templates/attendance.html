@@ -6,7 +6,10 @@
 </head>
 <body>
     <h2>Dodaj wpis obecności</h2>
-    <p><a href="{{ url_for('raport') }}">Raport</a> | <a href="{{ url_for('logout') }}">Wyloguj</a></p>
+    <p>
+        <a href="{{ url_for('raport') }}">Raport</a><br>
+        <a href="{{ url_for('logout') }}">Wyloguj</a>
+    </p>
     {% with messages = get_flashed_messages() %}
       {% if messages %}<ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>{% endif %}
     {% endwith %}
@@ -16,14 +19,14 @@
         Początek pracy:
         <select name="start_time" required>
             {% for t in time_options %}
-            <option value="{{ t }}">{{ t }}</option>
+            <option value="{{ t }}" {% if t == default_start %}selected{% endif %}>{{ t }}</option>
             {% endfor %}
         </select><br>
 
         Koniec pracy:
         <select name="end_time" required>
             {% for t in time_options %}
-            <option value="{{ t }}">{{ t }}</option>
+             <option value="{{ t }}" {% if t == default_end %}selected{% endif %}>{{ t }}</option>
             {% endfor %}
         </select><br>
 

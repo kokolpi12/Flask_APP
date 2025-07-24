@@ -9,7 +9,11 @@
 </head>
 <body>
     <h2>Raport obecności - {{ username }}</h2>
-    <p><a href="{{ url_for('attendance') }}">Powrót</a> | <a href="{{ url_for('detailraport') }}">Raport Szczegółowy</a> | <a href="{{ url_for('logout') }}">Wyloguj</a></p>
+    <p>
+        <a href="{{ url_for('attendance') }}">Powrót</a><br>
+        <a href="{{ url_for('detailraport') }}">Raport Szczegółowy</a><br>
+        <a href="{{ url_for('logout') }}">Wyloguj</a>
+    </p>
     <table>
         <thead>
             <tr>
@@ -17,20 +21,29 @@
                 <th>Początek</th>
                 <th>Koniec</th>
                 <th>Godzin</th>
-                <th>Rodzaj pracy</th>
-                <th>Opis</th>
+                <!-- <th>Rodzaj pracy</th> -->
+                <th>Uwagi</th>
             </tr>
         </thead>
         <tbody>
-            {% for e in entries %}
-            <tr>
-                <td>{{ e.date }}</td>
-                <td>{{ e.start_time.strftime('%H:%M') }}</td>
-                <td>{{ e.end_time.strftime('%H:%M') }}</td>
-                <td>{{ ((datetime.combine(e.date, e.end_time) - datetime.combine(e.date, e.start_time)).seconds // 3600) + (((datetime.combine(e.date, e.end_time) - datetime.combine(e.date, e.start_time)).seconds % 3600) // 60) / 60 }}</td>
-                <td>{{ e.work_type }}</td>
-                <td>{{ e.description or '' }}</td>
-            </tr>
+            {% for day in raport_data %}
+                <tr style="background-color: #f0f0f0;">
+                    <!-- <td colspan="6"><strong>{{ day.date }} — Łącznie: {{ day.total_hours }} h</strong></td> -->
+                </tr>
+                {% for e in day.entries %}
+                <tr>
+                    <td>{{ e.date }}</td>
+                    <td>{{ e.start_time.strftime('%H:%M') }}</td>
+                    <td>{{ e.end_time.strftime('%H:%M') }}</td>
+                    <td>{{ day.total_hours }}</td>
+                    <!-- <td>
+                        {{ ((datetime.combine(e.date, e.end_time) - datetime.combine(e.date, e.start_time)).seconds // 3600)
+                            + (((datetime.combine(e.date, e.end_time) - datetime.combine(e.date, e.start_time)).seconds % 3600) // 60) / 60 }}
+                    </td> -->
+                    <!-- <td>{{ e.work_type }}</td> -->
+                    <td>{{ e.description or '' }}</td>
+                </tr>
+                {% endfor %}
             {% endfor %}
         </tbody>
     </table>
