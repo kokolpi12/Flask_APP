@@ -1,6 +1,6 @@
 # Flask_APP
 
-# Adding user from server CLI
+## Adding user from server CLI
 
 ```bash
 flask adduser
