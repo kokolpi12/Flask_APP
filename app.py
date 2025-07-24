@@ -99,6 +99,16 @@ def raport():
 
     return render_template('raport.html', entries=entries, username=user.username, datetime=datetime)
 
+@app.route('/detailraport')
+def detailraport():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    entries = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.date).all()
+
+    return render_template('detailraport.html', entries=entries, username=user.username, datetime=datetime)
+
 # KOMENDA INICJALIZUJĄCA
 @app.cli.command('initdb')
 def initdb():
