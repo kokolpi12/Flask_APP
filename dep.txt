@@ -1,0 +1,15 @@
+Założenia ifów
+
+godzina zakończenia nie może być równa lub wczesniejsza niż godzina rozpoczęcia
+end_time > start_time
+
+if work_type in urlop, opieka nad dzieckiem, L4
+	no start_time no end_time
+
+if work_type in urlop, opieka nad dzieckiem
+	hours = 8h
+
+if work_type == L4
+	hours = 6,4h
+
+

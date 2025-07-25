@@ -1,8 +1,10 @@
-from flask              import Flask, render_template, redirect, url_for, request, session, flash
+from flask              import Flask, render_template, redirect, url_for, request, session, flash, send_file
 from flask_sqlalchemy   import SQLAlchemy
 from werkzeug.security  import generate_password_hash, check_password_hash
 from collections        import defaultdict
 from datetime           import datetime, date, time, timedelta
+from openpyxl           import Workbook
+from io                 import BytesIO
 import os, getpass
 
 app = Flask(__name__)
@@ -77,14 +79,17 @@ def attendance():
         end_time = datetime.strptime(data['end_time'], '%H:%M').time()
         user_description = data.get('description', '').strip()
 
+        # Automatyczne ustawienie czasu pracy przy wybranych opcjach
         work_type = data['work_type']
 
-        if data['work_type'] in ["opieka nad dzieckiem"]:
-            start_time = time(8, 0)
-            end_time = time(16, 0)
-            description = f"Opieka nad dzieckiem - {user_description}"
-        elif data['work_type'] in ["urlop"]:
-            description = f"Urlop - {user_description}"
+        if data['work_type'] in ["urlop", "opieka nad dzieckiem", "L4"]:
+            if data['work_type'] == "L4":
+                start_time = time(8, 0)
+                end_time = time(12, 24)
+            else:
+                start_time = time(8, 0)
+                end_time = time(16, 0)
+            description = f"{work_type} - {user_description}"
         else:
             description = user_description
 
@@ -154,8 +159,59 @@ def raport():
 
     return render_template('raport.html', raport_data=raport_data, username=user.username, datetime=datetime)
 
-@app.route('/detailraport')
-def detailraport():
+@app.route('/raport/export')
+def raport_export():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    entries = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.date).all()
+
+    # Grupowanie i liczenie
+    from collections import defaultdict
+    grouped = defaultdict(list)
+    for e in entries:
+        grouped[e.date].append(e)
+
+    # Tworzenie Excela
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Raport Obecności"
+
+    # Nagłówek
+    ws.append(["Data", "Początek", "Koniec", "Godzin", "Rodzaj pracy", "Opis"])
+
+    for date, day_entries in grouped.items():
+        total_hours = 0
+        for e in day_entries:
+            start_dt = datetime.combine(e.date, e.start_time)
+            end_dt = datetime.combine(e.date, e.end_time)
+            duration = (end_dt - start_dt).total_seconds() / 3600
+
+            # mnożnik dla nadgodzin
+            duration_calc = duration * 1.5 if e.work_type.lower() == "nadgodziny" else duration
+
+            ws.append([
+                e.date.strftime('%Y-%m-%d'),
+                e.start_time.strftime('%H:%M'),
+                e.end_time.strftime('%H:%M'),
+                round(duration_calc, 2),
+                e.work_type,
+                e.description or ""
+            ])
+
+    # Zapis do strumienia
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return send_file(output,
+                     download_name=f'raport_{user.username}.xlsx',
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+@app.route('/raport/details')
+def raport_details():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -163,6 +219,11 @@ def detailraport():
     entries = Attendance.query.filter_by(user_id=user.id).order_by(Attendance.date).all()
 
     return render_template('detailraport.html', entries=entries, username=user.username, datetime=datetime)
+
+@app.cli.command('deleteEntry')
+def deleteEntry():
+    print("Usunięto")
+    return
 
 @app.cli.command('adduser')
 def adduser():

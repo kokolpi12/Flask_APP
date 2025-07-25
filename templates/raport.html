@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Raport obecności</title>
-    <style>
-        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 4px; }
-        .desc { min-width: fit-content; }
-    </style>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h2>Raport obecności - {{ username }}</h2>
     <p>
         <a href="{{ url_for('attendance') }}">Powrót</a><br>
-        <a href="{{ url_for('detailraport') }}">Raport Szczegółowy</a><br>
+        <a href="{{ url_for('raport_export') }}">📥 Eksportuj do Excela</a><br>
+        <a href="{{ url_for('raport_details') }}">Raport Szczegółowy</a><br>
         <a href="{{ url_for('logout') }}">Wyloguj</a>
     </p>
-    <table>
+    <table class="reptab">
         <thead>
             <tr>
                 <th>Data</th>

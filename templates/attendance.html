@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista obecności</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h2>Dodaj wpis obecności</h2>
@@ -41,7 +42,7 @@
         </select><br>
 
         <label for="description">Opis:</label> 
-        <textarea name="description"></textarea><br>
+        <textarea maxlength="70" name="description"></textarea><br>
         
         <button type="submit">Zapisz</button>
     </form>
