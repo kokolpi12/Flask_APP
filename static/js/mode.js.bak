@@ -1,0 +1,24 @@
+const toggleBtn = document.getElementById('toggle-dark-mode');
+const body = document.body;
+
+// Przywróć tryb z localStorage (jeśli jest)
+if (localStorage.getItem('darkMode') === 'enabled') {
+  body.classList.add('dark-mode');
+}
+
+toggleBtn.addEventListener('click', () => {
+  body.classList.toggle('dark-mode');
+
+  if (body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+    toggleBtn.textContent = '☀️ Tryb jasny';
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+    toggleBtn.textContent = '🌙 Tryb ciemny';
+  }
+});
+
+// Ustaw początkowy tekst przycisku
+if (body.classList.contains('dark-mode')) {
+  toggleBtn.textContent = '☀️ Tryb jasny';
+}
