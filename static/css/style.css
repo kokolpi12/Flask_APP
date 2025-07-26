@@ -1,0 +1,198 @@
+/* style.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9fafb;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button,
+input[type="submit"],
+a.btn {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 16px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover,
+a.btn:hover {
+    background-color: #2980b9;
+}
+
+.action {
+    color: red;
+    text-decoration: line-through;
+    font-weight: bold;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    color: red;
+    text-align: center;
+}
+
+.reptab {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reptab th, .reptab td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.reptab th {
+    background-color: #f4f6f8;
+    font-weight: bold;
+}
+
+.reptab tr:hover {
+    background-color: #f1f1f1;
+}
+
+.desc {
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+/* Przyciski u góry */
+p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Responsywność */
+@media (max-width: 600px) {
+    form, .reptab {
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    .reptab th, .reptab td {
+        padding: 10px;
+    }
+
+    .btn {
+        display: block;
+        margin: 10px auto;
+    }
+}
+
+/* DARK MODE */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode h2 {
+    text-align: center;
+    color: #d2c1bf;
+    margin-bottom: 1rem;
+}
+
+body.dark-mode form,
+body.dark-mode .reptab {
+    background-color: #1e1e1e;
+    box-shadow: none;
+    color: #ddd;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #2c2c2c;
+    color: #ddd;
+    border: 1px solid #555;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #88c0d0;
+    outline: none;
+}
+
+body.dark-mode button,
+body.dark-mode input[type="submit"],
+body.dark-mode a.btn {
+    background-color: #5e81ac;
+    color: #eceff4;
+}
+
+body.dark-mode button:hover,
+body.dark-mode input[type="submit"]:hover,
+body.dark-mode a.btn:hover {
+    background-color: #81a1c1;
+}
+
+body.dark-mode ul {
+    color: #bf616a;
+}
+
+body.dark-mode .reptab th {
+    background-color: #2e3440;
+}
+
+body.dark-mode .reptab tr:hover {
+    background-color: #3b4252;
+}

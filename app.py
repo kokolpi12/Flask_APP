@@ -5,10 +5,13 @@ from collections        import defaultdict
 from datetime           import datetime, date, time, timedelta
 from openpyxl           import Workbook
 from io                 import BytesIO
+from dotenv             import load_dotenv
 import os, getpass
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = 'tajny_klucz'
+app.secret_key = os.getenv("SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///obecnosc.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
