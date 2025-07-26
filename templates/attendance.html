@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista obecności</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
-    <h2>Dodaj wpis obecności</h2>
+    <h2 class="title">Dodaj wpis obecności</h2>
     <p>
-        <a href="{{ url_for('raport') }}">Raport</a><br>
-        <a href="{{ url_for('logout') }}">Wyloguj</a>
+        <a href="{{ url_for('raport') }}" class="btn">Raport</a> | <a href="{{ url_for('logout') }}" class="btn">Wyloguj</a>
     </p>
     {% with messages = get_flashed_messages() %}
       {% if messages %}<ul>{% for msg in messages %}<li>{{ msg }}</li>{% endfor %}</ul>{% endif %}
@@ -17,21 +17,13 @@
     <form method="POST">
         Data: <input type="date" name="date" value="{{ today }}" required><br>
 
-        Początek pracy:
-        <select name="start_time" required>
-            {% for t in time_options %}
-            <option value="{{ t }}" {% if t == default_start %}selected{% endif %}>{{ t }}</option>
-            {% endfor %}
-        </select><br>
+        <label for="start_time">Początek pracy:</label>
+        <input type="time" name="start_time" required step="900" value="{{ default_start }}"><br>
+        
+        <label for="start_time">Koniec pracy:</label>
+        <input type="time" name="end_time" required step="900" value="{{ default_end }}"><br>
 
-        Koniec pracy:
-        <select name="end_time" required>
-            {% for t in time_options %}
-             <option value="{{ t }}" {% if t == default_end %}selected{% endif %}>{{ t }}</option>
-            {% endfor %}
-        </select><br>
-
-        Rodzaj pracy:
+        <label for="start_time">Rodzaj pracy:</label>
         <select name="work_type">
             <option value="normalny">Normalny</option>
             <option value="nadgodziny">Nadgodziny</option>
@@ -41,10 +33,10 @@
             <option value="opieka nad dzieckiem">Opieka nad dzieckiem</option>
         </select><br>
 
-        <label for="description">Opis:</label> 
+        <label for="description">Uwagi:</label> 
         <textarea maxlength="70" name="description"></textarea><br>
         
-        <button type="submit">Zapisz</button>
+        <button type="submit" class="btn">Zapisz</button>
     </form>
 </body>
 </html>

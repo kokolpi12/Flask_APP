@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <title>Raport obecności</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h2>Raport obecności - {{ username }}</h2>
+    <h2>Raport obecności - {{ firstname }} {{ lastname }}</h2>
     <p>
-        <a href="{{ url_for('attendance') }}">Powrót</a><br>
-        <a href="{{ url_for('raport_export') }}">📥 Eksportuj do Excela</a><br>
-        <a href="{{ url_for('raport_details') }}">Raport Szczegółowy</a><br>
-        <a href="{{ url_for('logout') }}">Wyloguj</a>
+        <a href="{{ url_for('attendance') }}" class="btn">Powrót</a> | 
+        <a href="{{ url_for('raport_export') }}" class="btn">📥 Eksportuj do Excela</a><br>
+        <a href="{{ url_for('raport_details') }}" class="btn">Raport Szczegółowy</a> | 
+        <a href="{{ url_for('logout') }}" class="btn">Wyloguj</a>
     </p>
     <table class="reptab">
         <thead>

@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Logowanie</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h2>Logowanie</h2>
@@ -20,7 +21,7 @@
         <input type="text" name="username"><br>
         <label>Hasło:</label><br>
         <input type="password" name="password"><br><br>
-        <input type="submit" value="Zaloguj">
+        <input type="submit" value="Zaloguj" class="btn">
     </form>
 </body>
 </html>

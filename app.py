@@ -18,6 +18,8 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    firstname = db.Column(db.String(80), unique=False, nullable=False)
+    lastname = db.Column(db.String(80), unique=False, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
 
 class Attendance(db.Model):
@@ -157,7 +159,7 @@ def raport():
             'total_hours': round(total_hours, 2),
         })
 
-    return render_template('raport.html', raport_data=raport_data, username=user.username, datetime=datetime)
+    return render_template('raport.html', raport_data=raport_data, username=user.username, firstname=user.firstname, lastname=user.lastname, datetime=datetime)
 
 @app.route('/raport/export')
 def raport_export():
@@ -232,9 +234,12 @@ def adduser():
         print("Użytkownik już istnieje.")
         return
     
+    firstname = input("Imię: ")
+    lastname = input("Nazwisko: ")
+
     password = getpass.getpass("Hasło: ")
     password_hash = generate_password_hash(password)
-    user = User(username=username, password_hash=password_hash)
+    user = User(username=username, firstname=firstname, lastname=lastname, password_hash=password_hash)
     
     db.session.add(user)
     db.session.commit()

@@ -14,4 +14,38 @@ table, th, td {
 
 body {
     text-align: center;
+    background-color: darkslategrey;
+    color: white;
+    font-size: 120%;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: maroon;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: darkturquoise;
+}
+
+#description {
+    box-shadow: 1px 1px 1px #999;
+}
+
+.action {
+    color: red;
+    text-decoration: line-through;
+    font-weight: bold;
+}
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
 }
