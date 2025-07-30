@@ -33,14 +33,14 @@
                 <td>{{ e.work_type }}</td>
                 <td class="desc">{{ e.description or '' }}</td>
                 <td>
-                    <a href="" class="action">Usuń</a><br>
+                    <a href="{{ url_for('delete_entry', entry_id=e.id) }}" class="action" onclick="return confirm('Na pewno usunąć ten wpis?');">Usuń</a><br>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <button id="toggle-dark-mode" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
-        🌙 Tryb ciemny
+        🌙
     </button>
     <script src="{{ url_for('static', filename='js/mode.js') }}"></script>
 </body>

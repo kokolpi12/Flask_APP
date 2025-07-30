@@ -25,6 +25,7 @@ class User(db.Model):
     lastname = db.Column(db.String(80), unique=False, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
 
+
 class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -42,6 +43,7 @@ def index():
         return redirect(url_for('login'))
     return redirect(url_for('attendance'))
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -54,10 +56,12 @@ def login():
         flash('Nieprawidłowy login lub hasło')
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
 
 @app.route('/attendance', methods=['GET', 'POST'])
 def attendance():
@@ -126,6 +130,7 @@ def attendance():
                             time_options=time_options
     )
 
+
 @app.route('/raport')
 def raport():
     if 'user_id' not in session:
@@ -163,6 +168,7 @@ def raport():
         })
 
     return render_template('raport.html', raport_data=raport_data, username=user.username, firstname=user.firstname, lastname=user.lastname, datetime=datetime)
+
 
 @app.route('/raport/export')
 def raport_export():
@@ -215,6 +221,7 @@ def raport_export():
                      as_attachment=True,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
+
 @app.route('/raport/details')
 def raport_details():
     if 'user_id' not in session:
@@ -225,10 +232,14 @@ def raport_details():
 
     return render_template('detailraport.html', entries=entries, username=user.username, datetime=datetime)
 
-@app.cli.command('deleteEntry')
-def deleteEntry():
-    print("Usunięto")
-    return
+
+@app.route('/delete/<int:entry_id>')
+def delete_entry(entry_id):
+    entry = Attendance.query.get_or_404(entry_id)
+    db.session.delete(entry)
+    db.session.commit()
+    return redirect(url_for('raport_details'))
+
 
 @app.cli.command('adduser')
 def adduser():
@@ -248,6 +259,7 @@ def adduser():
     db.session.commit()
     
     print(f"Dodano użytkownika {username}.")
+
 
 # KOMENDA INICJALIZUJĄCA
 @app.cli.command('initdb')

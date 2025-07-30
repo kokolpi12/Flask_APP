@@ -4,14 +4,14 @@ const body = document.body;
 // Funkcja do włączenia dark mode
 function enableDarkMode() {
   body.classList.add('dark-mode');
-  toggleBtn.textContent = '☀️ Tryb jasny';
+  toggleBtn.textContent = '☀️ ';
   localStorage.setItem('darkMode', 'enabled');
 }
 
 // Funkcja do wyłączenia dark mode
 function disableDarkMode() {
   body.classList.remove('dark-mode');
-  toggleBtn.textContent = '🌙 Tryb ciemny';
+  toggleBtn.textContent = '🌙';
   localStorage.setItem('darkMode', 'disabled');
 }
 
