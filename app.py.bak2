@@ -1,4 +1,4 @@
-from flask              import Flask, render_template, redirect, url_for, request, session, flash, send_file, g
+from flask              import Flask, render_template, redirect, url_for, request, session, flash, send_file
 from flask_sqlalchemy   import SQLAlchemy
 from werkzeug.security  import generate_password_hash, check_password_hash
 from collections        import defaultdict
@@ -9,15 +9,6 @@ from dotenv             import load_dotenv
 import os, getpass
 
 load_dotenv()
-
-import logging
-
-logging.basicConfig(
-    filename="user_actions.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -45,20 +36,6 @@ class Attendance(db.Model):
     description = db.Column(db.Text, nullable=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-# LOGS
-@app.before_request
-def log_request():
-    g.start_time = datetime.now()
-    user = session.get("username", "anonymous")
-    logger.info(f"USER={user} -> {request.method} {request.path} IP={request.remote_addr}")
-
-@app.after_request
-def log_response(response):
-    duration = (datetime.now() - g.start_time).total_seconds()
-    user = session.get("username", "anonymous")
-    logger.info(f"USER={user} <- {response.status_code} {request.path} ({duration:.3f}s)")
-    return response
-
 # ROUTY
 @app.route('/')
 def index():
@@ -75,21 +52,14 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.id
-            session['username'] = user.username
-            logger.info(f"LOGIN SUCCESS: user={user.username}")
             return redirect(url_for('attendance'))
-        else:
-            logger.warning(f"LOGIN FAILED: username={username}")
-            flash('Nieprawidłowy login lub hasło')
+        flash('Nieprawidłowy login lub hasło')
     return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    logger.info(f"LOGOUT: user={session.get('username', 'anonymous')}")
-    session.pop('user_id', None)
-    session.pop('username', None)
     return redirect(url_for('login'))
 
 
@@ -148,8 +118,6 @@ def attendance():
         
         db.session.add(entry)
         db.session.commit()
-        logger.info(f"ATTENDANCE ADD: username={session['username']} "
-            f"date={entry.date} {entry.start_time}-{entry.end_time} type={entry.work_type}")
         flash('Dodano wpis')
         return redirect(url_for('attendance'))
 
@@ -248,8 +216,6 @@ def raport_export():
     wb.save(output)
     output.seek(0)
 
-    logger.info(f"EXPORT RAPORT: username={session['username']} entries={len(entries)}")
-
     return send_file(output,
                      download_name=f'raport_{user.username}.xlsx',
                      as_attachment=True,
@@ -272,8 +238,6 @@ def delete_entry(entry_id):
     entry = Attendance.query.get_or_404(entry_id)
     db.session.delete(entry)
     db.session.commit()
-    logger.info(f"DELETE ENTRY: username={session.get('username')} entry_id={entry_id} "
-        f"date={entry.date} {entry.start_time}-{entry.end_time} type={entry.work_type}")
     return redirect(url_for('raport_details'))
 
 
@@ -294,8 +258,6 @@ def adduser():
     db.session.add(user)
     db.session.commit()
     
-    logger.info(f"ADDED USER: username={user}")
-
     print(f"Dodano użytkownika {username}.")
 
 
